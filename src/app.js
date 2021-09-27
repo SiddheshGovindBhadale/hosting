@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Product = require("../src/models/mens.js");
+const showcase = require("../src/models/topShowcase");
+const assessoris = require("../src/models/assessoris");
+const hygiene = require("../src/models/hygiene");
 const router = require("../src/routers/router");
 
 mongoose.connect("mongodb+srv://Siddhesh:Siddhesh3341@cluster0.cn61z.mongodb.net/Hi?retryWrites=true&w=majority" , {

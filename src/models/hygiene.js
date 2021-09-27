@@ -2,22 +2,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const menSchema = new mongoose.Schema({
-  name:{
+  title:{
     type:String,
     trim:true
   },
-  midname:{
+  discreption:{
     type:String,
     trim:true
   },
-  sirname:{
+  about:{
+    type:String,
+    trim:true
+  },
+  features:{
     type:String,
     trim:true
   },
   image:{
+  
   }
 })
 
-const Product = new mongoose.model("Product" ,menSchema );
+const hygiene = new mongoose.model("hygiene" ,menSchema );
 
-module.exports = Product ;
+module.exports = hygiene ;

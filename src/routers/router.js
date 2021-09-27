@@ -3,7 +3,9 @@ const multer = require("multer");
 const path = require("path");
 const router = new express.Router();
 const app = express();
-const Product = require("../models/mens");
+const showcase = require("../models/topShowcase");
+const assessoris = require("../models/assessoris");
+const hygiene = require("../models/hygiene");
 
 
 
@@ -16,30 +18,85 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-}).array('image',4)
+})
 router.use( express.static(__dirname+'upload/images'));
 
 
 
-
-//get data method
-router.get('/api/product', async(req, res) => {
+/*-------------------------------*/
+//testing api
+router.get('/', async(req, res) => {
   try{
-     const getproduct = await Product.find({});
+     res.send("api is running");
+  }catch(e){
+     res.status(400).send(e);
+  }
+})
+/*---------------------------------*/
+
+
+/*----------------get---------------*/
+
+//topShowcase products get
+router.get('/api/showcase', async(req, res) => {
+  try{
+     const getproduct = await showcase.find({});
      res.send(getproduct);
   }catch(e){
      res.status(400).send(e);
   }
 })
 
-
-//post data method
-router.post('/api/product', upload, async(req, res ,next) => {
+//mobile assessoris products get
+router.get('/api/assessoris', async(req, res) => {
   try{
-     const addProduct = new Product({
-       name: req.body.name,
-       midname:req.body.midname,
-       sirname: req.body.sirname,
+     const getproduct = await assessoris.find({});
+     res.send(getproduct);
+  }catch(e){
+     res.status(400).send(e);
+  }
+})
+
+//hygiene assessoris products get
+router.get('/api/hygiene', async(req, res) => {
+  try{
+     const getproduct = await hygiene.find({});
+     res.send(getproduct);
+  }catch(e){
+     res.status(400).send(e);
+  }
+})
+
+/*----------------add---------------*/
+
+//topShowcase post data method
+router.post('/api/showcase', upload.single('image'), async(req, res ,next) => {
+  try{
+     const addProduct = new showcase({
+       title: req.body.title,
+       discreption:req.body.discreption,
+       product_id: req.body.product_id,
+       bg_color: req.body.bg_color,
+       image:req.file
+     })
+     const insertPtoduct =  await addProduct.save();
+     res.status(201).send(insertPtoduct)
+     
+    
+  }catch(e){
+     res.status(400).send(e);
+     console.log(e)
+  }
+})
+
+//Mobile assessoris post data method
+router.post('/api/assessoris', upload.array('image',4), async(req, res ,next) => {
+  try{
+     const addProduct = new assessoris({
+       title: req.body.title,
+       discreption:req.body.discreption,
+       about: req.body.about,
+       features: req.body.features,
        image:req.files
      })
      const insertPtoduct =  await addProduct.save();
@@ -52,12 +109,33 @@ router.post('/api/product', upload, async(req, res ,next) => {
   }
 })
 
+//hygiene post data method
+router.post('/api/hygiene', upload.array('image',4), async(req, res ,next) => {
+  try{
+     const addProduct = new hygiene({
+       title: req.body.title,
+       discreption:req.body.discreption,
+       about: req.body.about,
+       features: req.body.features,
+       image:req.files
+     })
+     const insertPtoduct =  await addProduct.save();
+     res.status(201).send(insertPtoduct)
+     
+    
+  }catch(e){
+     res.status(400).send(e);
+     console.log(e)
+  }
+})
 
-//patch(update) data method
-router.patch('/api/product/:id', async(req, res) => {
+/*----------------update--------------*/
+
+//topShowcase patch(update) data method
+router.patch('/api/showcase/:id', async(req, res) => {
   try{
      const _id = req.params.id;
-     const updateproduct = await Product.findByIdAndUpdate(_id,req.body,{
+     const updateproduct = await showcase.findByIdAndUpdate(_id,req.body,{
        new:true
      });
      res.send(updateproduct);
@@ -66,11 +144,59 @@ router.patch('/api/product/:id', async(req, res) => {
   }
 })
 
-
-//delete data method
-router.delete('/api/product/:id', async(req, res) => {
+//mobile assessoris patch(update) data method
+router.patch('/api/assessoris/:id', async(req, res) => {
   try{
-     const Deleteproduct = await Product.findByIdAndDelete(req.params.id);
+     const _id = req.params.id;
+     const updateproduct = await assessoris.findByIdAndUpdate(_id,req.body,{
+       new:true
+     });
+     res.send(updateproduct);
+  }catch(e){
+     res.status(500).send(e);
+  }
+})
+
+//hygiene patch(update) data method
+router.patch('/api/hygiene/:id', async(req, res) => {
+  try{
+     const _id = req.params.id;
+     const updateproduct = await hygiene.findByIdAndUpdate(_id,req.body,{
+       new:true
+     });
+     res.send(updateproduct);
+  }catch(e){
+     res.status(500).send(e);
+  }
+})
+
+/*---------------delete---------------*/
+
+//topShowcase delete data method
+router.delete('/api/showcase/:id', async(req, res) => {
+  try{
+     const Deleteproduct = await showcase.findByIdAndDelete(req.params.id);
+     res.send(Deleteproduct);
+  }catch(e){
+     res.status(500).send(e);
+  }
+})
+
+//mobile assessoris delete data method
+router.delete('/api/assessoris/:id', async(req, res) => {
+  try{
+     const Deleteproduct = await assessoris.findByIdAndDelete(req.params.id);
+     res.send(Deleteproduct);
+  }catch(e){
+     res.status(500).send(e);
+  }
+})
+
+
+//hygiene delete data method
+router.delete('/api/hygiene/:id', async(req, res) => {
+  try{
+     const Deleteproduct = await hygiene.findByIdAndDelete(req.params.id);
      res.send(Deleteproduct);
   }catch(e){
      res.status(500).send(e);
